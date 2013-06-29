@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "ZenTab",
+  "description": "Clears your mind by clearing your browser of inactive tabs",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "Enso.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs"
+  ], 
+  "background": {
+	"persistent": true, 
+	"page": "background.html"
+  }
+  
+}
