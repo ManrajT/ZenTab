@@ -18,8 +18,6 @@ chrome.tab.onUpdated.addListener(function(tabId, changeInfo){
 chrome.tab.onActivated.addListener(function(activeInfo){
 
 //Timebomb object for removing tabs after period of time
-
-
 var Timebomb = function(tab, timeout){
   this.tab = tab;
   this.timeout = timeout;
@@ -45,6 +43,8 @@ var Timebomb = function(tab, timeout){
 	  
   
 //
+
+//Just testing some changes 
     
 	
   
