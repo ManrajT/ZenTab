@@ -1,0 +1,13 @@
+ZenTab - Only allow a single tab open.
+-->The first tab activated
+-->Don't want it to close all the other tabs without people being notified
+
+How?
+onActivated + lastFocused workaround + remove + update
+
+
+
+//On startup, close all tabs and open a blank page (about:blank);
+-->the currently focused one will have to be a settings page, which can't be saved as a currentTab
+//Do not do anything to settings pages, which usually open up in new tabs and are perceived differently than normal pages
+
