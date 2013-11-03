@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
 
-  "name": "ZenTab",
-  "description": "Clears your mind by clearing your browser of inactive tabs",
+  "name": “ZenTab",
+  "description": "A chrome extension which forces you to focus by only allowing one tab per window.",
   "version": "1.0",
-
-  "browser_action": {
-    "default_icon": "Enso.png",
-    "default_popup": "popup.html"
-  },
+  
+  "icons": { "16": "icon16.png", 
+             "48": "icon48.png", 
+             "128": "icon128.png" },
+              
   "permissions": [
     "tabs"
   ], 
