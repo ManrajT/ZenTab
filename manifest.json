@@ -1,14 +1,12 @@
 {
   "manifest_version": 2,
 
-  "name": “ZenTab",
+  "name": "ZenTab",
   "description": "A chrome extension which forces you to focus by only allowing one tab per window.",
   "version": "1.0",
-  
-  "icons": { "16": "icon16.png", 
-             "48": "icon48.png", 
-             "128": "icon128.png" },
-              
+  "author": "Manraj Tatla",
+  "icons": { "48": "icons/icon48.png", 
+             "128": "icons/icon128.png" },
   "permissions": [
     "tabs"
   ], 

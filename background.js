@@ -1,8 +1,7 @@
-//Old code was the poorly planned.  Starting fresh again.  
-    
-	
-  
-  
+//Peak into what this is doing through alerts and inspect views console
+
+ 
+
 
 
 
