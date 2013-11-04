@@ -5,58 +5,58 @@
 //onCreated + lastFocused workaround + remove + update 
 
 
+//--------------Starting Extension ----------------\\
 
-//close all other tabs at startup
-chrome.runtime.onStartup.addListener(function(){
-  alert("extension has just started");
-  
-  /*
-  var startResponse = confirm("Would you like to start ZenTab now?  This will close all tabs except the currently active."); 
-  if(startResponse == false){
-    chrome.management.setEnabled(ExtensionInfo.id, false); 
-  }
-  */
- }
-);    
+var startResponse = confirm("Would you like to enable ZenTab?\n This will close all tabs."); 
 
+if(startResponse == false){
+    chrome.management.setEnabled(chrome.runtime.id, false); //disable extension
+}
+else if(startResponse == true){
+  chrome.tabs.query({}, function(tabArray){  //replace all open tabs with a single blank tab
+    var tabIdArray = tabIdArrayFrom(tabArray); 
+    chrome.tabs.create({url:"about:blank"});
+    chrome.tabs.remove(tabIdArray);
+  })
+}
 
-
-//save active tab...
 var currentTab;
+chrome.tabs.getCurrent(function(tab){
+  currentTab = tab;
+})
 
 //when the program first loads up   *the first page will be the chrome page...
 chrome.tabs.getCurrent(function(tab){
   currentTab = tab;
-};  
+}) 
 
 //as it's url changes 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){ 
     for (var change in changeInfo){
       if(change == "url" && tab.active == true && /chrome:/.test(tab.url) == false){ 
         currentTab = tab; 
-        alert("URL has changed to " + changeInfo["url"]);
+        /*alert("URL has changed to " + changeInfo["url"]);*/
       }
     } 
-});
+})
    
 
 
 //move newly opened tab to where the last currentTab was
 chrome.tabs.onCreated.addListener(function(tab){
-  if(typeof currentTab != "undefined" && /chrome:/.text(tab.url) == false){ 
+  if(typeof currentTab != "undefined" && /chrome:/.test(tab.url) == false){ 
     chrome.tabs.update({url: currentTab.url});
   }  
-}); 
-
-//close all 
+}) 
 
 
-
-
-//Force newly opened tab to URL of 
-
-
-//Passing over that data onCreated
+function tabIdArrayFrom(tabArray){
+  var tabIdArray = []; 
+  for(var i=0; i<tabArray.length; i++){
+    tabIdArray[i] = tabArray[i].id; 
+  } 
+  return tabIdArray;
+}; 
  
 
 
