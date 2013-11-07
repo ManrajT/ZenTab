@@ -1,13 +1,37 @@
 ZenTab - Only allow a single tab open.
--->The first tab activated
--->Don't want it to close all the other tabs without people being notified
+For newly opened tabs, either close them immediately or, in the case of popups, close them and redirect the current tab to their URL
 
-How?
-onActivated + lastFocused workaround + remove + update
+What to do about links that open in new tabs?
+ -->content script that converts _blank to _self //what about more complex js and html
+ -->close opened tab and redirect current tab to where it was
+ 
+We can't keep history if the current page is being moved to newly opened tabs...
+chrome.tabs.onCreated.addListener(function(tab){
+  chrome.tabs.remove(tab.id); 
+})   
+ 
+ 
+ 
+ 
+ 
+try{
 
+chrome.tabs.query({}, function(tabArray){
+  if(tabArray.length > 1){
+    var startResponse = confirm("Would you like to enable ZenTab now?\n This will close all your other tabs");
+    
+    if(startResponse == false){
+      chrome.management.setEnabled(chrome.runtime.id, false);
+    }
+    else if(startResponse == true){
+      chrome.tabs.getCurrent(function(tab){
+        if(tabArray.indexOf(tab) == -1)
+          throw "could not find tab in tabArray"; 
+        var tabIdArray = tabIdArrayFrom(tabArray);
+        chrome.tabs.remove(tabIdArray);
 
-
-//On startup, close all tabs and open a blank page (about:blank);
--->the currently focused one will have to be a settings page, which can't be saved as a currentTab
-//Do not do anything to settings pages, which usually open up in new tabs and are perceived differently than normal pages
-
+      })
+    } 
+  }
+})
+}

@@ -1,54 +1,7 @@
-//Peak into what this is doing through alerts and inspect views console
-//What to do about other open tabs?  What do I do on first install?  
-//   --> chrome.management.setEnabled on startup
-//How to keep chrome settings un touched
-//onCreated + lastFocused workaround + remove + update 
-
-
-//--------------Starting Extension ----------------\\
-
-var startResponse = confirm("Would you like to enable ZenTab?\n This will close all tabs."); 
-
-if(startResponse == false){
-    chrome.management.setEnabled(chrome.runtime.id, false); //disable extension
-}
-else if(startResponse == true){
-  chrome.tabs.query({}, function(tabArray){  //replace all open tabs with a single blank tab
-    var tabIdArray = tabIdArrayFrom(tabArray); 
-    chrome.tabs.create({url:"about:blank"});
-    chrome.tabs.remove(tabIdArray);
-  })
-}
-
-var currentTab;
-chrome.tabs.getCurrent(function(tab){
-  currentTab = tab;
-})
-
-//when the program first loads up   *the first page will be the chrome page...
-chrome.tabs.getCurrent(function(tab){
-  currentTab = tab;
-}) 
-
-//as it's url changes 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){ 
-    for (var change in changeInfo){
-      if(change == "url" && tab.active == true && /chrome:/.test(tab.url) == false){ 
-        currentTab = tab; 
-        /*alert("URL has changed to " + changeInfo["url"]);*/
-      }
-    } 
-})
-   
-
-
-//move newly opened tab to where the last currentTab was
-chrome.tabs.onCreated.addListener(function(tab){
-  if(typeof currentTab != "undefined" && /chrome:/.test(tab.url) == false){ 
-    chrome.tabs.update({url: currentTab.url});
-  }  
-}) 
-
+//On startup, check if there are more than one tab.
+//if there are, then ask if they would like to enable ZenTab
+//if they do, then close all the tabs except the current one
+//if they don't, then disable the extension
 
 function tabIdArrayFrom(tabArray){
   var tabIdArray = []; 
@@ -57,8 +10,30 @@ function tabIdArrayFrom(tabArray){
   } 
   return tabIdArray;
 }; 
- 
 
 
 
-
+try{
+  chrome.tabs.query({}, function(tabArray){
+     var tALen = tabArray.length; 
+     if(tALen > 1){
+       var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
+       
+       if(startResponse == true){
+         chrome.tabs.getCurrent(function(currentTab){
+           var cTpos = tabArray.index(currentTab);
+           if(cTpos == -1)
+             throw "Could not find currentTab in tabArray";
+            
+           tabArray = tabArray.splice(ctPos, 1);
+           if(tabArray.length >= tabArray.length)
+             throw "Did not get shortened properly"; 
+           
+           chrome.tabs.remove(tabArray);  
+       }
+       else if(startResponse == false){
+         chrome.management.setEnabled(chrome.runtime.id, false);
+       }
+    }
+  })
+  
