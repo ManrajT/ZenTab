@@ -13,8 +13,11 @@ function tabIdArrayFrom(tabArray){
 //if there are, then ask if they would like to enable ZenTab
 //if they do, then close all the tabs except the current one
 //if they don't, then disable the extension
+
+var mainTabId; 
+
   chrome.tabs.query({}, function(tabArray){
-     var startLength  = tabArray.length; 
+     var startLength  = tabArray.length;
      if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
        //How to close popups??
@@ -26,7 +29,11 @@ function tabIdArrayFrom(tabArray){
        else if(startResponse == false){
          chrome.management.setEnabled(chrome.runtime.id, false);
        }
-    }
+     }
+     
+     chrome.tabs.query({active:true, windowType:"normal"}, function(tabArray){
+       mainTabId = tabArray[0].id;    //What if mainTab changes? The entire extension fails...  
+     })
   })
   
 //If a new tab is created, 
@@ -38,4 +45,5 @@ chrome.tabs.onCreated.addListener(function(tab){
     chrome.tabs.remove(tab); 
   }
   else if(/*tab was opened by by user accidentally*/){
-    tab.url  
+    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); //what if URL has not been set yet...
+    chrome.tabs.remove(tab);
