@@ -1,7 +1,3 @@
-//On startup, check if there are more than one tab.
-//if there are, then ask if they would like to enable ZenTab
-//if they do, then close all the tabs except the current one
-//if they don't, then disable the extension
 
 function tabIdArrayFrom(tabArray){
   var tabIdArray = []; 
@@ -13,7 +9,10 @@ function tabIdArrayFrom(tabArray){
 
 
 
-try{
+//On startup, check if there are more than one tab.
+//if there are, then ask if they would like to enable ZenTab
+//if they do, then close all the tabs except the current one
+//if they don't, then disable the extension
   chrome.tabs.query({}, function(tabArray){
      var startLength  = tabArray.length; 
      if(tabArray.length > 1){
@@ -29,9 +28,14 @@ try{
        }
     }
   })
-}
+  
+//If a new tab is created, 
+//a) close it
+//b) redirect the main window towards it
 
-catch(e){
-  console.log(e);
-}
-      
+chrome.tabs.onCreated.addListener(function(tab){
+  if(/*tab is opened by user manually*/){
+    chrome.tabs.remove(tab); 
+  }
+  else if(/*tab was opened by by user accidentally*/){
+    tab.url  
