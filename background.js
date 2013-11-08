@@ -15,25 +15,23 @@ function tabIdArrayFrom(tabArray){
 
 try{
   chrome.tabs.query({}, function(tabArray){
-     var tALen = tabArray.length; 
-     if(tALen > 1){
+     var startLength  = tabArray.length; 
+     if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
-       
+       //How to close popups??
        if(startResponse == true){
-         chrome.tabs.getCurrent(function(currentTab){
-           var cTpos = tabArray.index(currentTab);
-           if(cTpos == -1)
-             throw "Could not find currentTab in tabArray";
-            
-           tabArray = tabArray.splice(ctPos, 1);
-           if(tabArray.length >= tabArray.length)
-             throw "Did not get shortened properly"; 
-           
-           chrome.tabs.remove(tabArray);  
+         chrome.tabs.query({active:false}, function(inactiveTabs){
+           chrome.tabs.remove(tabIdArrayFrom(inactiveTabs)); 
+         })
        }
        else if(startResponse == false){
          chrome.management.setEnabled(chrome.runtime.id, false);
        }
     }
   })
-  
+}
+
+catch(e){
+  console.log(e);
+}
+      
