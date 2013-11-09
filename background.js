@@ -1,4 +1,3 @@
-
 function tabIdArrayFrom(tabArray){
   var tabIdArray = []; 
   for(var i=0; i<tabArray.length; i++){
@@ -8,15 +7,10 @@ function tabIdArrayFrom(tabArray){
 }; 
 
 
-
-//On startup, check if there are more than one tab.
-//if there are, then ask if they would like to enable ZenTab
-//if they do, then close all the tabs except the current one
-//if they don't, then disable the extension
-
+//startup procedure
 var mainTabId; 
 
-  chrome.tabs.query({}, function(tabArray){
+chrome.tabs.query({}, function(tabArray){
      var startLength  = tabArray.length;
      if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
@@ -30,20 +24,22 @@ var mainTabId;
          chrome.management.setEnabled(chrome.runtime.id, false);
        }
      }
-     
      chrome.tabs.query({active:true, windowType:"normal"}, function(tabArray){
        mainTabId = tabArray[0].id;    //What if mainTab changes? The entire extension fails...  
      })
-  })
+})
   
-//If a new tab is created, 
-//a) close it
-//b) redirect the main window towards it
-
+//Prevent new tabs
 chrome.tabs.onCreated.addListener(function(tab){
-  if(/*tab is opened by user manually*/){
-    chrome.tabs.remove(tab); 
+  if(/New\sTab/.test(tab.title)){
+    chrome.tabs.remove(tab.id); 
   }
-  else if(/*tab was opened by by user accidentally*/){
-    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); //what if URL has not been set yet...
-    chrome.tabs.remove(tab);
+})
+
+//Redirect links opening in new tabs back to the main tab
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  if(changeInfo.url && tabId != mainTabId){
+    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); 
+    chrome.tabs.remove(tabId);
+  }
+})
