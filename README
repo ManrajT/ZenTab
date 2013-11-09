@@ -2,6 +2,9 @@ ZenTab
 =======
 A chrome extension which forces you to focus by only allowing one tab per window.
 
-Currently unhappy with how extension deals with links opening in new tabs.  Right now, it takes those links, opens them in the main tab, and then closes the tab that opened intermediately.  
+
+Current problems:
+-How the extension deals with links that open in new tabs
+
 
 If you have any suggestions on how to solve this problem, or improve the extension, please email ManrajT@gmail.com   
