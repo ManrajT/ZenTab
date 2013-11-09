@@ -6,14 +6,13 @@ function tabIdArrayFrom(tabArray){
     tabIdArray[i] = tabArray[i].id; 
   } 
   return tabIdArray;
-}; 
+} 
 
 function startUp(){
   chrome.tabs.query({}, function(tabArray){
      var startLength  = tabArray.length;
      if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
-       //How to close popups??
        if(startResponse == true){
          chrome.tabs.query({active:false}, function(inactiveTabs){
            chrome.tabs.remove(tabIdArrayFrom(inactiveTabs)); 
@@ -33,7 +32,7 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo){
   if(tabId == mainTabId){
     mainTabId = undefined;
   }
-}
+})
 
 chrome.tabs.onCreated.addListener(function(tab){
   if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
