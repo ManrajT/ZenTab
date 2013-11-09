@@ -1,3 +1,5 @@
+var mainTabId;
+
 function tabIdArrayFrom(tabArray){
   var tabIdArray = []; 
   for(var i=0; i<tabArray.length; i++){
@@ -6,11 +8,8 @@ function tabIdArrayFrom(tabArray){
   return tabIdArray;
 }; 
 
-
-//startup procedure
-var mainTabId; 
-
-chrome.tabs.query({}, function(tabArray){
+function startUp(){
+  chrome.tabs.query({}, function(tabArray){
      var startLength  = tabArray.length;
      if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
@@ -27,14 +26,24 @@ chrome.tabs.query({}, function(tabArray){
      chrome.tabs.query({active:true, windowType:"normal"}, function(tabArray){
        mainTabId = tabArray[0].id;    //What if mainTab changes? The entire extension fails...  
      })
-})
-  
-//Prevent new tabs
+  })
+}
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo){
+  if(tabId == mainTabId){
+    mainTabId = undefined;
+  }
+}
+
 chrome.tabs.onCreated.addListener(function(tab){
-  if(/New\sTab/.test(tab.title)){
+  if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
+    startUp();
+  }
+  else if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
     chrome.tabs.remove(tab.id); 
   }
 })
+
 
 //Redirect links opening in new tabs back to the main tab
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
@@ -43,3 +52,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     chrome.tabs.remove(tabId);
   }
 })
+
+
+    
