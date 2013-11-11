@@ -23,7 +23,7 @@ function startUp(){
        }
      }
      chrome.tabs.query({active:true, windowType:"normal"}, function(tabArray){
-       mainTabId = tabArray[0].id;    //What if mainTab changes? The entire extension fails...  
+       mainTabId = tabArray[0].id;    //mainTabId is not being set 
      })
   })
 }
@@ -51,6 +51,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     chrome.tabs.remove(tabId);
   }
 })
+
+startUp(); 
 
 
     
