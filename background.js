@@ -14,8 +14,11 @@ function startUp(){
      if(tabArray.length > 1){
        var startResponse = confirm("Would you like enable ZenTab?\nThis will close all your tabs");
        if(startResponse == true){
-         chrome.tabs.query({active:false}, function(inactiveTabs){
+         chrome.tabs.query({active:false}, function(inactiveTabs){  
            chrome.tabs.remove(tabIdArrayFrom(inactiveTabs)); 
+         })
+         chrome.tabs.query({currentWindow:false}, function(tabsInOtherWindows){  
+           chrome.tabs.remove(tabIdArrayFrom(tabsInOtherWindows)); 
          })
        }
        else if(startResponse == false){
