@@ -5,6 +5,8 @@ A chrome extension which forces you to focus by only allowing one tab.
 
 Current problems:
 -thumbnail alpha transparency.
--popups opening in main tab  
+-popups opening in main tab
+-opening many new tabs will close main tab eventually
+-If lone tab is a new tab, and you change the URL, browser crashes and continues to crash afterwards
 
 If you have any suggestions on how to solve this problem, or improve the extension, please email ManrajT@gmail.com   

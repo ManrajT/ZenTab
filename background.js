@@ -44,15 +44,20 @@ chrome.tabs.onCreated.addListener(function(tab){
   else if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
     startUp();
   }
+  else
+    chrome.tabs.remove(tab.id); 
 })
 
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  if(changeInfo.url == "chrome://newtab" && tabId == mainTabId){
+    startUp();
+  }
+})
 
 //Redirect links opening in new tabs back to the main tab
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-  if(changeInfo.url && tabId != mainTabId){
-    chrome.tabs.remove(tabId);
-    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); 
-    
+chrome.webNavigation.onBeforeNavigate.addListener(function(details){
+  if(details.tabId != mainTabId && details.frameId == 0){
+    chrome.tabs.update(mainTabId, {url:details.url, active:true});
   }
 })
 
