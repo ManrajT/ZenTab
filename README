@@ -4,7 +4,7 @@ A chrome extension which forces you to focus by only allowing one tab.
 
 
 Current problems:
--How the extension deals with links that open in new tabs
-
+-thumbnail alpha transparency.
+-popups opening in main tab  
 
 If you have any suggestions on how to solve this problem, or improve the extension, please email ManrajT@gmail.com   

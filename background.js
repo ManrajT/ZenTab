@@ -38,11 +38,11 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo){
 })
 
 chrome.tabs.onCreated.addListener(function(tab){
-  if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
-    startUp();
-  }
-  else if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
+  if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
     chrome.tabs.remove(tab.id); 
+  }
+  else if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
+    startUp();
   }
 })
 
@@ -50,8 +50,9 @@ chrome.tabs.onCreated.addListener(function(tab){
 //Redirect links opening in new tabs back to the main tab
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
   if(changeInfo.url && tabId != mainTabId){
-    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); 
     chrome.tabs.remove(tabId);
+    chrome.tabs.update(mainTabId, {url:tab.url, active:true}); 
+    
   }
 })
 
