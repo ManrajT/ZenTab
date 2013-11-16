@@ -1,4 +1,4 @@
-var mainTabId;
+
 
 function tabIdArrayFrom(tabArray){
   var tabIdArray = []; 
@@ -33,9 +33,17 @@ function startUp(){
   })
 }
 
+function redirectMainTab(url){
+  chrome.tabs.update(mainTabId,{url:url, active:true});
+}
+
+
+var mainTabId;
+
+
 chrome.tabs.onCreated.addListener(function(tab){
   if(/chrome:/.test(tab.url)){
-	chrome.tabs.update(mainTabId,{url:tab.url, active:true});
+	redirectMainTab(tab.url);
 	chrome.tabs.remove(tab.id);   	
   }
   else if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
@@ -63,10 +71,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 })
 
 
-//Open links opening in new tab in the mainTab
 chrome.webNavigation.onBeforeNavigate.addListener(function(details){
   if(details.tabId != mainTabId && details.frameId == 0){
-    chrome.tabs.update(mainTabId, {url:details.url, active:true});
+    redirectMainTab(details.url);
   }
 })
 
