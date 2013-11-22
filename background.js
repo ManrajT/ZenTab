@@ -39,21 +39,27 @@ function redirectMainTab(url){
 
 
 var mainTabId;
-
+var redirectFlag; 
 
 chrome.tabs.onCreated.addListener(function(tab){
-  if(/chrome:/.test(tab.url)){
+  if(/chrome:/.test(tab.url)){  //to allow chrome settings page to open 
 	redirectMainTab(tab.url);
 	chrome.tabs.remove(tab.id);   	
-  }
-  else if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
-    chrome.tabs.remove(tab.id); 
   }
   else if(mainTabId == undefined){   //Redo startup() if mainTab's been closed
     startUp();
   }
-  else
+  else if(/New\sTab/.test(tab.title)){	//Prevent new tab from being opened
     chrome.tabs.remove(tab.id); 
+  }
+  else if(redirectFlag == true){  //close those links that open in a new tab
+    chrome.tabs.remove(tab.id);
+    redirectFlag == false;
+  }
+  else{							//to allow pages to open from places I've forgotten about	
+    redirectMainTab(tab.url);
+    chrome.tabs.remove(tab.id);
+  }
 })
 
 
@@ -74,6 +80,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 chrome.webNavigation.onBeforeNavigate.addListener(function(details){
   if(details.tabId != mainTabId && details.frameId == 0){
     redirectMainTab(details.url);
+    redirectFlag = true; 
   }
 })
 
