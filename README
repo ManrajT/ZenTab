@@ -2,11 +2,6 @@ ZenTab
 =======
 A chrome extension which forces you to focus by only allowing one tab.
 
-
-Current problems:
--thumbnail alpha transparency.
+Current bugs:
 -popups opening in main tab
 -opening too many new tabs too quickly will close main tab
--when incognito is enabled, it can’t be opened.  
-
-If you have any suggestions on how to solve this problem, or improve the extension, please email ManrajT@gmail.com   
